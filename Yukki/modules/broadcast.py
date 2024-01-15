@@ -23,8 +23,7 @@ async def total_users(_, message: Message):
     afk_users = []
     try:
         chats = await get_afk_users()
-        for chat in chats:
-            afk_users.append(int(chat["user_id"]))
+        afk_users.extend(int(chat["user_id"]) for chat in chats)
     except Exception as e:
         return await message.reply_text(f"**Error:-** {e}")
     users = len(afk_users)
@@ -36,16 +35,14 @@ async def broadcast(_, message):
     if message.reply_to_message:
         x = message.reply_to_message.id
         y = message.chat.id
+    elif len(message.command) < 2:
+        return await message.reply_text(
+            "**Usage**:\n/broadcast [MESSAGE] or [Reply to a Message]")
     else:
-        if len(message.command) < 2:
-            return await message.reply_text(
-                "**Usage**:\n/broadcast [MESSAGE] or [Reply to a Message]")
         query = message.text.split(None, 1)[1]
     sent = 0
-    chats = []
     schats = await get_served_chats()
-    for chat in schats:
-        chats.append(int(chat["chat_id"]))
+    chats = [int(chat["chat_id"]) for chat in schats]
     for i in chats:
         try:
             await app.forward_messages(

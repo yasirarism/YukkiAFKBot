@@ -40,7 +40,7 @@ async def initiate_bot():
     getme = await app.get_me()
     botid = getme.id
     if getme.last_name:
-        botname = getme.first_name + " " + getme.last_name
+        botname = f"{getme.first_name} {getme.last_name}"
     else:
         botname = getme.first_name
 
